@@ -22,9 +22,9 @@ func _ready():
 		multiplayer.multiplayer_peer = multiplayer_peer)
 
 	multiplayer.peer_connected.connect(func(peer_id):
-		remote_add_characters.rpc_id(peer_id, characters.keys())
+		add_character(peer_id)
 		remote_add_character.rpc(peer_id)
-		add_character(peer_id))
+		remote_add_connected_characters.rpc_id(peer_id, characters.keys()))
 	
 	multiplayer.peer_disconnected.connect(func(peer_id):
 		remote_delete_character.rpc(peer_id)
@@ -37,13 +37,14 @@ func add_character(peer_id):
 	character.name = "Player " + str(peer_id)
 	add_child(character)
 	character.global_position.x = randf()
+	print("create_character_with_peer_id " + str(peer_id) + " on_client " + str(multiplayer.get_unique_id()))
 
 func delete_character(peer_id):
 	var character = characters.get(peer_id)
 	if is_instance_valid(character): character.queue_free()
 	characters.erase(peer_id)
 
-@rpc("any_peer")
+@rpc
 func remote_add_character(peer_id):
 	add_character(peer_id)
 
@@ -51,7 +52,8 @@ func remote_add_character(peer_id):
 func remote_delete_character(peer_id):
 	delete_character(peer_id)
 
-@rpc("any_peer")
-func remote_add_characters(peer_ids):
+@rpc
+func remote_add_connected_characters(peer_ids):
+	#Тут надо фильтровать чарактеров
 	for peer_id in peer_ids:
 		add_character(peer_id)
