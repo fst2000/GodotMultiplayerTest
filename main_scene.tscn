@@ -1,0 +1,75 @@
+[gd_scene load_steps=8 format=3 uid="uid://q86d12akkb6s"]
+
+[ext_resource type="Script" path="res://main_scene.gd" id="1_wtqx8"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qgwxx"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_rpv4g"]
+sky_material = SubResource("ProceduralSkyMaterial_qgwxx")
+
+[sub_resource type="Environment" id="Environment_vcxtf"]
+background_mode = 2
+sky = SubResource("Sky_rpv4g")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ad25u"]
+size = Vector2(10, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddemn"]
+albedo_color = Color(0.149198, 0.246007, 0.0731261, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_be088"]
+data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+
+[node name="MainScene" type="Node3D"]
+script = ExtResource("1_wtqx8")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vcxtf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Menu" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Host" type="Button" parent="CanvasLayer/Menu"]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 96.0
+offset_right = 329.0
+offset_bottom = 127.0
+scale = Vector2(4, 4)
+text = "Host"
+
+[node name="Join" type="Button" parent="CanvasLayer/Menu"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 97.0
+offset_right = 51.0
+offset_bottom = 128.0
+scale = Vector2(4, 4)
+text = "Join"
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ad25u")
+surface_material_override/0 = SubResource("StandardMaterial3D_ddemn")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_be088")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-1, 2.99004e-08, -8.21505e-08, 0, 0.939693, 0.34202, 8.74228e-08, 0.34202, -0.939693, 0, 3, -6)
