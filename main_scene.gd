@@ -15,16 +15,18 @@ func _ready():
 	host_button.connect("pressed", func():
 		multiplayer_peer.create_server(port)
 		multiplayer.multiplayer_peer = multiplayer_peer
-		add_character(multiplayer_peer.get_unique_id()))
+		add_character(1))
 	
 	join_button.connect("pressed", func():
 		multiplayer_peer.create_client(adress, port)
 		multiplayer.multiplayer_peer = multiplayer_peer)
 
 	multiplayer.peer_connected.connect(func(peer_id):
-		add_character(peer_id)
-		remote_add_character.rpc(peer_id)
-		remote_add_connected_characters.rpc_id(peer_id, characters.keys()))
+		if multiplayer.get_unique_id() == 1:
+			remote_add_character.rpc(peer_id)
+			remote_add_connected_characters.rpc_id(peer_id, characters.keys())
+			add_character(peer_id)
+		)
 	
 	multiplayer.peer_disconnected.connect(func(peer_id):
 		remote_delete_character.rpc(peer_id)
@@ -37,7 +39,6 @@ func add_character(peer_id):
 	character.name = "Player " + str(peer_id)
 	add_child(character)
 	character.global_position.x = randf()
-	print("create_character_with_peer_id " + str(peer_id) + " on_client " + str(multiplayer.get_unique_id()))
 
 func delete_character(peer_id):
 	var character = characters.get(peer_id)
@@ -46,6 +47,7 @@ func delete_character(peer_id):
 
 @rpc
 func remote_add_character(peer_id):
+	print("remote added ", peer_id, " to peer ", multiplayer.get_unique_id())
 	add_character(peer_id)
 
 @rpc
@@ -54,6 +56,5 @@ func remote_delete_character(peer_id):
 
 @rpc
 func remote_add_connected_characters(peer_ids):
-	#Тут надо фильтровать чарактеров
 	for peer_id in peer_ids:
 		add_character(peer_id)
