@@ -29,8 +29,12 @@ func _ready():
 		)
 	
 	multiplayer.peer_disconnected.connect(func(peer_id):
-		remote_delete_character.rpc(peer_id)
-		delete_character(peer_id))
+		if peer_id == 1:
+			for p_id in characters.keys():
+				delete_character(p_id)
+		else:
+			delete_character(peer_id)
+		)
 
 func add_character(peer_id):
 	var character = character_prefab.instantiate()
@@ -47,7 +51,6 @@ func delete_character(peer_id):
 
 @rpc
 func remote_add_character(peer_id):
-	print("remote added ", peer_id, " to peer ", multiplayer.get_unique_id())
 	add_character(peer_id)
 
 @rpc
@@ -58,3 +61,8 @@ func remote_delete_character(peer_id):
 func remote_add_connected_characters(peer_ids):
 	for peer_id in peer_ids:
 		add_character(peer_id)
+
+@rpc
+func remote_delete_characters(peer_ids):
+	for peer_id in peer_ids:
+		delete_character(peer_id)
