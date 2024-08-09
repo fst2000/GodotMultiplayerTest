@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://q86d12akkb6s"]
 
-[ext_resource type="Script" path="res://main_scene.gd" id="1_wtqx8"]
+[ext_resource type="Script" path="res://code/main_scene.gd" id="1_yhfh0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qgwxx"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -13,7 +13,6 @@ sky_material = SubResource("ProceduralSkyMaterial_qgwxx")
 background_mode = 2
 sky = SubResource("Sky_rpv4g")
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ad25u"]
 size = Vector2(10, 10)
@@ -25,7 +24,7 @@ albedo_color = Color(0.149198, 0.246007, 0.0731261, 1)
 data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
 
 [node name="MainScene" type="Node3D"]
-script = ExtResource("1_wtqx8")
+script = ExtResource("1_yhfh0")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vcxtf")
@@ -45,22 +44,44 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Host" type="Button" parent="CanvasLayer/Menu"]
-layout_mode = 0
-offset_left = 285.0
-offset_top = 96.0
-offset_right = 329.0
-offset_bottom = 127.0
+layout_mode = 1
+offset_left = 29.0
+offset_top = 460.0
+offset_right = 73.0
+offset_bottom = 491.0
 scale = Vector2(4, 4)
 text = "Host"
 
 [node name="Join" type="Button" parent="CanvasLayer/Menu"]
-layout_mode = 0
-offset_left = 13.0
-offset_top = 97.0
-offset_right = 51.0
-offset_bottom = 128.0
+layout_mode = 1
+offset_left = 29.0
+offset_top = 34.0
+offset_right = 67.0
+offset_bottom = 65.0
 scale = Vector2(4, 4)
 text = "Join"
+
+[node name="ServerListContainer" type="VBoxContainer" parent="CanvasLayer/Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 247.0
+offset_top = 34.0
+offset_right = -758.0
+offset_bottom = -574.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+
+[node name="ServerName" type="TextEdit" parent="CanvasLayer/Menu"]
+layout_mode = 0
+offset_left = 247.0
+offset_top = 460.0
+offset_right = 444.0
+offset_bottom = 501.0
+scale = Vector2(3, 3)
+placeholder_text = "Type Server Name Here"
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_ad25u")
@@ -70,6 +91,3 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ddemn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_be088")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, 2.99004e-08, -8.21505e-08, 0, 0.939693, 0.34202, 8.74228e-08, 0.34202, -0.939693, 0, 3, -6)
